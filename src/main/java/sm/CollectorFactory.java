@@ -1,7 +1,10 @@
 package sm;
 
 import sm.collector.Collector;
-import sm.collector.FacebookCollector;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CollectorFactory {
 
@@ -12,5 +15,9 @@ public class CollectorFactory {
         }
 
         return null;
+    }
+
+    public static List<Collector> create(String[] names) {
+        return Arrays.stream(names).map(CollectorFactory::create).collect(Collectors.toList());
     }
 }
