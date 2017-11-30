@@ -1,4 +1,4 @@
-package main.java.sm.collector;
+package sm.collector;
 import java.io.*;
 import java.util.*;
 

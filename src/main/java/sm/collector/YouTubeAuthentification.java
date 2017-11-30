@@ -1,4 +1,4 @@
-package main.java.sm.collector;
+package sm.collector;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.StoredCredential;
