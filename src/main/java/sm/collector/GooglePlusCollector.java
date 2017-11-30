@@ -1,4 +1,11 @@
-package sm.collector;
+package main.java.sm.collector;
+import java.io.IOException;
+import java.util.List;
+
+import com.google.api.services.plus.Plus;
+import com.google.api.services.plus.model.Activity;
+import com.google.api.services.plus.model.ActivityFeed;
+
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
