@@ -1,4 +1,4 @@
-package main.java.sm.collector;
+package sm.collector;
 
 import com.flickr4java.flickr.*;
 
