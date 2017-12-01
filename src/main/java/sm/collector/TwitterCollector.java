@@ -1,22 +1,16 @@
 package sm.collector;
-
-import groovy.json.JsonBuilder;
+import sm.collector.entity.Content;
+import sm.collector.entity.Post;
+import sm.collector.entity.Profile;
 import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
-
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
-public class TwitterCollector {
+public class TwitterCollector extends Collector {
 
-    public TwitterCollector() {
-
-    }
-
-    static public Twitter getAccessToken() {
-
+    private Twitter getAccessToken() {
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true).setOAuthConsumerKey("A7UIKEpBjMlatRjuLwPQvyszL")
                 .setOAuthConsumerSecret("mTHpPptB3wRzShahIgygvB7chJVtyWJ1eJqbjio0mCvCJxP0XQ")
@@ -27,106 +21,50 @@ public class TwitterCollector {
         return twitter;
     }
 
-    static public void searchUsers(String keywords, Twitter twitter) throws TwitterException, InterruptedException, IOException {
-        new File(System.getProperty("user.home")+"/Data").mkdir();
-        FileWriter  file = new FileWriter( System.getProperty("user.home")+"/Data"+"/Tw_SearchedUsers.json"
-        );
-        file.write("\r\n");
-        //users searching
-        ResponseList<User> users = twitter.searchUsers(keywords, -1);
-        file.write("*********************Retrieved Profiles**********************\n\n");
-        System.out.println("--------------------------------Retrieved Profiles-------------------------------- \n");
-        //users displaying
-        int i = 1;
-        for (User user : users) {
-            //  profile information displaying
-            displayData("User", i, user);
-            //profile information storing
-            storeData("User", i, file, user);
-            i++;
-        }
-        System.out.println("-------------------------------End----------------------------");
-        file.close();
-    }
-
-    static public void getTweetsByUser(String screenName, Twitter twitter) throws TwitterException, IOException {
-        new File(System.getProperty("user.home")+"/Data").mkdir();
-        FileWriter  file = new FileWriter( System.getProperty("user.home")+"/Data"+"/Tw_UserTimeline.json"
-        );
-        file.write("\r\n");
-        //set screenName of the user to fetch his posts
-        User user = twitter.showUser(screenName);
-        ResponseList<Status> status = twitter.getUserTimeline(user.getId());
-        file.write("*********************Retrieved Timeline of the User " + user.getName() + "**********************\n\n");
-        System.out.println("----------------------------Tweets of " + user.getName() + "----------------------------");
-        if (status != null) {
-            int i = 1;
-            for (Status stat : status) {
-                //TimeLine information displaying
-                displayData("Tweet", i, stat);
-                //TimeLine information storing
-                storeData("Tweet", i, file, stat);
-                i++;
-            }
-        }
-        System.out.println("-------------------------------------END----------------------");
-        file.close();
-
-    }
-
-    static public void getTweetsByKeywords(String keywords, Twitter twitter) throws IOException {
-        new File(System.getProperty("user.home")+"/Data").mkdir();
-        FileWriter  file = new FileWriter( System.getProperty("user.home")+"/Data"+"/Tw_TweetsByKeywords.json"
-        );
-        file.write("\r\n");
+    @Override
+    public List<Post> collectPosts(String keyword) {
+        List<Post> posts = new LinkedList<>();
+        Twitter twitter = getAccessToken();
         try {
-            Query query = new Query(keywords);
+            Query query = new Query(keyword);
             QueryResult result;
-            int i = 1;
             do {
                 result = twitter.search(query);
                 List<Status> tweets = result.getTweets();
-                file.write("*********************Retrieved Tweets for the following keywords (" + keywords + ") **********************\n\n");
-                System.out.println("----------------------------Tweets related to the following keywords \" " + keywords + " \"----------------------------");
                 for (Status tweet : tweets) {
-                    // information displaying
-                    displayData("Tweet", i, tweet);
-                    //information storing
-                    storeData("Tweet", i, file, tweet);
-                    i++;
+                    posts.add(new Post(Content.Type.TWITTER,tweet));
                 }
-                System.out.println("--------------------------------END---------------------------");
 
             } while ((query = result.nextQuery()) != null);
-            System.exit(0);
-            file.close();
         } catch (TwitterException te) {
             te.printStackTrace();
             System.out.println("Failed to search tweets: " + te.getMessage());
             System.exit(-1);
         }
-
+        return posts;
     }
 
-    public static void displayData(String entityName, int entityNumber, Object entity) {
-        System.out.println("\n==========================================================================");
-        System.out.println("                                  " + entityName + " " + entityNumber);
-        System.out.println("==========================================================================\n");
-        System.out.println(new JsonBuilder(entity).toPrettyString());
-    }
-
-    public static void storeData(String entityName, int entityNumber, FileWriter file, Object entity) throws IOException {
-        file.write("***************************" + entityName + " " + entityNumber + "************************\n");
-        file.write(new JsonBuilder(entity).toPrettyString());
-        file.write("\r\n");
-    }
-
-    public static void main(String[] args) throws TwitterException, InterruptedException, IOException {
+    @Override
+    public List<Profile> collectProfiles(String keyword) {
+        List<Profile> profiles = new LinkedList<>();
         Twitter twitter = getAccessToken();
-        //searchUsers("barak obama", twitter);
-        //getTweetsByUser("aminaamara1", twitter);
-        getTweetsByKeywords("Warren,Donald,Trump", twitter);
-
+        ResponseList<User> users = null;
+        try {
+            users = twitter.searchUsers(keyword, -1);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        for (User user : users) {
+            profiles.add(new Profile(Content.Type.TWITTER, user));
+        }
+        return profiles;
     }
-}
+    public static void main(String[] args) throws TwitterException, InterruptedException, IOException {
+        TwitterCollector collector = new TwitterCollector();
+        //List<Profile> profiles = collector.collectProfiles("obama");
+      List<Post> posts = collector.collectPosts("obama");
+        //profiles.forEach(System.out::println);
+       posts.forEach(System.out::println);
+    }
 
+}

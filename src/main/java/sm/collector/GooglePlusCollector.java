@@ -1,11 +1,4 @@
-package main.java.sm.collector;
-import java.io.IOException;
-import java.util.List;
-
-import com.google.api.services.plus.Plus;
-import com.google.api.services.plus.model.Activity;
-import com.google.api.services.plus.model.ActivityFeed;
-
+package sm.collector;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -19,22 +12,24 @@ import com.google.api.services.plus.model.Activity;
 import com.google.api.services.plus.model.ActivityFeed;
 import com.google.api.services.plus.model.PeopleFeed;
 import com.google.api.services.plus.model.Person;
-import groovy.json.JsonBuilder;
-import java.io.*;
+import sm.collector.entity.Content;
+import sm.collector.entity.Post;
+import sm.collector.entity.Profile;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
-public class GooglePlusCollector {
-    private static Plus plusSvc;
-    private static String CLIENT_ID = "246775426922-8sskbhfg6h3usqindumvs52libg0okr6.apps.googleusercontent.com";
-    private static String CLIENT_SECRET = "MrseVLH6WwmxIx9rk1wMtLLR";
-    private static String REDIRECT_URI = "https://localhost";
+public class GooglePlusCollector extends Collector {
 
-    public GooglePlusCollector() {
-    }
-
-    public static Plus authentificate() throws IOException {
+    private Plus authentificate() throws IOException {
+        Plus plusSvc;
+        String CLIENT_ID = "554467993368-3v80utiauf4uhvg9c4r224gbergv8f7d.apps.googleusercontent.com";
+        String CLIENT_SECRET = "OHnd1YwyjWJ_gzaHXIAYkKdA";
+        String REDIRECT_URI = "https://localhost";
         HttpTransport httpTransport = new NetHttpTransport();
         JsonFactory jsonFactory = new JacksonFactory();
 
@@ -64,58 +59,24 @@ public class GooglePlusCollector {
                 .setFromTokenResponse(response);
 
         return plusSvc = new Plus.Builder(httpTransport, jsonFactory,
-                credential).setApplicationName("SocialMediaDataCollector").build();
+                credential).setApplicationName("SocialMediaExtractor").build();
     }
 
-    public static void searchPeople(String keywords, Plus plusSvc) throws IOException {
-        new File(System.getProperty("user.home")+"/Data").mkdir();
-        FileWriter  file = new FileWriter( System.getProperty("user.home")+"/Data"+"/GP_Profiles.json"
-        );
-        file.write("\r\n");
-        Plus.People.Search searchPeople = plusSvc.people().search(keywords);
-        searchPeople.setMaxResults(5L);
-        PeopleFeed peopleFeed = searchPeople.execute();
-        List<Person> people = peopleFeed.getItems();
-
-        // Loop through until we arrive at an empty page, or the second page
-        file.write("**************************Retrieved Profiles**********************************\n");
-        System.out.println("--------------------------------Retrieved Profiles-------------------------------- \n");
-        int pageNumber = 1;
-        int i = 1;
-        while (people != null && pageNumber <= 2) {
-            pageNumber++;
-            for (Person person : people) {
-                //  profile information displaying
-                displayData("User", i, person);
-                //profile information storing
-                storeData("User", i, file, person);
-                i++;
-            }
-
-            // We will know we are on the last page when the next page token is null.
-            // If this is the case, break.
-            if (peopleFeed.getNextPageToken() == null) {
-                break;
-            }
-        }
-        System.out.println("--------------------------------------------------------------------------- \n");
-        file.write("*******************************************************************************\n");
-        file.close();
-    }
-
-    public static void getActivityByKeyword(String keywords, Plus plusSvc) throws IOException {
-        new File(System.getProperty("user.home")+"/Data").mkdir();
-        FileWriter  file = new FileWriter( System.getProperty("user.home")+"/Data"+"/GP_ActivitiesByKeywords.json"
-        );
-        file.write("\r\n");
-        Plus.Activities.Search searchActivities = null;
-        //search activities relative to this "keyword"
+    @Override
+    public List<Post> collectPosts(String keyword) {
+        List<Post> posts = new LinkedList<>();
+        Plus plusSvc = null;
         try {
-            searchActivities = plusSvc.activities().search(keywords);
+            plusSvc = authentificate();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //20L is maximum number of activities to include in the response, which is used for paging
+        Plus.Activities.Search searchActivities = null;
+        try {
+            searchActivities = plusSvc.activities().search(keyword);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         searchActivities.setMaxResults(20L);
         ActivityFeed activityFeed = null;
         try {
@@ -123,30 +84,17 @@ public class GooglePlusCollector {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // get activities in the current page of results.
         List<Activity> activities = activityFeed.getItems();
-        // Loop through until we arrive at an empty page
-        file.write("**************************Retrieved Activities**********************************\n");
-        System.out.println("--------------------------------Retrieved Activities-------------------------------- \n");
         int pageNumber = 1;
-        int i = 1;
         while (activities != null && pageNumber <= 2) {
             pageNumber++;
             for (Activity activity : activities) {
-                //information displaying
-                displayData("Activity", i, activity);
-                //information storing
-                storeData("Activity", i, file, activity);
-                i++;
+                posts.add(new Post(Content.Type.GOOGLE_PLUS, activity));
             }
-            // We will know we are on the last page when the next page token is null.
-            // If this is the case, break.
             if (activityFeed.getNextPageToken() == null) {
                 break;
             }
-            // Prepare to request the next page of activities
             searchActivities.setPageToken(activityFeed.getNextPageToken());
-            // Execute and process the next page request
             try {
                 activityFeed = searchActivities.execute();
             } catch (IOException e) {
@@ -154,69 +102,42 @@ public class GooglePlusCollector {
             }
             activities = activityFeed.getItems();
         }
-        System.out.println("--------------------------------------------------------------------------- \n");
-        file.write("*******************************************************************************\n");
-        file.close();
+        return posts;
     }
 
-    public static void getUserActivities(String idProfile, Plus plusSvc) throws IOException {
-        new File(System.getProperty("user.home")+"/Data").mkdir();
-        FileWriter  file = new FileWriter( System.getProperty("user.home")+"/Data"+"/GP_UserTimeline.json"
-        );
-        file.write("\r\n");
-        //get the list of activities of a given user using his profile ID
-        Plus.Activities.List listActivities = plusSvc.activities().list(idProfile, "public");
-        listActivities.setMaxResults(5L);
-        // Execute the request for the first page
-        ActivityFeed activityFeed = listActivities.execute();
-        // Unwrap the request and extract the pieces we want
-        List<Activity> activities = activityFeed.getItems();
-        file.write("**************************Retrieved User Timeline Activities**********************************\n");
-        System.out.println("--------------------------------Retrieved User Timeline Activities-------------------------------- \n");
-        // Loop through until we arrive at an empty page
-        int i=1;
-        while (activities != null) {
-            for (Activity activity : activities) {
-                //  profile information displaying
-                displayData("Activity", i, activity);
-                //profile information storing
-                storeData("Activity", i, file, activity);
-                i++;
+    @Override
+    public List<Profile> collectProfiles(String keyword) {
+        List<Profile> profiles = new LinkedList<>();
+        Plus plusSvc = null;
+        try {
+            plusSvc = authentificate();
+            Plus.People.Search searchPeople = plusSvc.people().search(keyword);
+            searchPeople.setMaxResults(5L);
+            PeopleFeed peopleFeed = searchPeople.execute();
+            List<Person> people = peopleFeed.getItems();
+            int pageNumber = 1;
+            while (people != null && pageNumber <= 2) {
+                pageNumber++;
+                for (Person person : people) {
+                    profiles.add(new Profile(Content.Type.GOOGLE_PLUS, person));
+                }
+                if (peopleFeed.getNextPageToken() == null) {
+                    break;
+                }
             }
-
-            // We will know we are on the last page when the next page token is null.
-            // If this is the case, break.
-            if (activityFeed.getNextPageToken() == null) {
-                break;
-            }
-
-            // Prepare to request the next page of activities
-            listActivities.setPageToken(activityFeed.getNextPageToken());
-
-            // Execute and process the next page request
-            activityFeed = listActivities.execute();
-            activities = activityFeed.getItems();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        System.out.println("--------------------------------------------------------------------------- \n");
-        file.write("*******************************************************************************\n");
-        file.close();
-    }
-    public static void displayData(String entityName, int entityNumber, Object entity) {
-        System.out.println("\n==========================================================================");
-        System.out.println("                                  "+entityName+" " + entityNumber);
-        System.out.println("==========================================================================\n");
-        System.out.println(new JsonBuilder(entity).toPrettyString());
+        return profiles;
     }
 
-    public static void storeData(String entityName, int entityNumber, FileWriter file, Object entity) throws IOException {
-        file.write("***************************" + entityName + " " + entityNumber + "************************\n");
-        file.write(new JsonBuilder(entity).toPrettyString());
-        file.write("\r\n");
-    }
     public static void main(String[] args) throws IOException {
-        Plus plusSvc = authentificate();
-        //searchPeople("trump", plusSvc);
-        //getActivityByKeyword("wold cup 2018", plusSvc);
-        getUserActivities("+Trumpia", plusSvc);
+        GooglePlusCollector collector = new GooglePlusCollector();
+        //List<Profile> profiles = collector.collectProfiles("trump");
+        //profiles.forEach(System.out::println);
+
+        List<Post> posts = collector.collectPosts("Donalds Trump");
+        posts.forEach(System.out::println);
     }
+
 }
