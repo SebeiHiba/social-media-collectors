@@ -1,21 +1,19 @@
 package sm.collector;
 
-import java.io.*;
-import java.util.*;
-
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.CommentSnippet;
-import com.google.api.services.youtube.model.CommentThread;
-import com.google.api.services.youtube.model.CommentThreadListResponse;
-import com.google.api.services.youtube.model.ResourceId;
-import com.google.api.services.youtube.model.SearchListResponse;
-import com.google.api.services.youtube.model.SearchResult;
+import com.google.api.services.youtube.model.*;
 import sm.collector.entity.Content;
 import sm.collector.entity.Post;
 import sm.collector.entity.Profile;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.*;
 
 public class YouTubeCollector extends Collector {
     /**
@@ -35,6 +33,12 @@ public class YouTubeCollector extends Collector {
     //Collect Profiles
     public List<Profile> collectProfiles(String queryTerm) {
         List<Profile> profiles = new LinkedList<>();
+        try {
+            String queryTersm = getInputQuery();
+        } catch (IOException e) {
+            System.err.println("There was an IO error: " + e.getCause() + " : "
+                    + e.getMessage());
+        }
         search = intialize(queryTerm, "channel");
         // Call the API and print results.
         try {
@@ -53,14 +57,24 @@ public class YouTubeCollector extends Collector {
     //Collect Published Video
     public List<Post> collectPosts(String queryTerm) {
         List<Post> posts = new LinkedList<>();
+
+        try {
+            String queryTersm = getInputQuery();
+        } catch (IOException e) {
+            System.err.println("There was an IO error: " + e.getCause() + " : "
+                    + e.getMessage());
+        }
         search = intialize(queryTerm, "video");
         search.setMaxResults(NUMBER_OF_VIDEOS_RETURNED);
         // Call the API and print results.
         try {
             SearchListResponse searchResponse = search.execute();
             List<SearchResult> searchResultList = searchResponse.getItems();
+
             for (int i = 0; i < searchResultList.size(); i++) {
+                System.out.println("searchResult" + searchResultList.get(i).toPrettyString());
                 posts.add(new Post(Content.Type.YOUTUBE, searchResultList.get(i)));
+
             }
      /* if (searchResultList != null) {
             searchCommentsByVideo (searchResultList.iterator(), queryTerm);
@@ -72,14 +86,7 @@ public class YouTubeCollector extends Collector {
         return posts;
     }
 
-    /*
-        * Prints out all results in the Iterator. For each result, print the title,
-        * video ID, and thumbnail.
-        *
-        * @param iteratorSearchResults Iterator of SearchResults to print
-        *
-        * @param query Search query (String)
-        */
+    // Search Comments By Video ID
     public static List<CommentThread> searchCommentsByVideo(
 
             Iterator<SearchResult> iteratorSearchResults, String query) throws IOException {

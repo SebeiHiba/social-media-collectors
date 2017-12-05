@@ -39,10 +39,8 @@ public class YouTubeAuthentification {
     /**
      * Authorizes the installed application to access user's protected data.
      *
-     * @param scopes
-     *            list of scopes needed to run youtube upload.
-     * @param credentialDatastore
-     *            name of the credential datastore to cache OAuth tokens
+     * @param scopes              list of scopes needed to run youtube upload.
+     * @param credentialDatastore name of the credential datastore to cache OAuth tokens
      */
     public static Credential authorize(List<String> scopes,
                                        String credentialDatastore) throws IOException {
