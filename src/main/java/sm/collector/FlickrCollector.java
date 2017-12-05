@@ -1,31 +1,33 @@
 package sm.collector;
 
-import com.flickr4java.flickr.*;
-
-import com.flickr4java.flickr.collections.Collection;
-import com.flickr4java.flickr.people.PeopleInterface;
-import com.flickr4java.flickr.people.User;
+import com.flickr4java.flickr.Flickr;
+import com.flickr4java.flickr.FlickrException;
+import com.flickr4java.flickr.REST;
 import com.flickr4java.flickr.photos.Photo;
 import com.flickr4java.flickr.photos.PhotoList;
 import com.flickr4java.flickr.photos.PhotosInterface;
 import com.flickr4java.flickr.photos.SearchParameters;
 import com.flickr4java.flickr.test.TestInterface;
-import com.flickr4java.flickr.util.XMLUtilities;
-import groovy.json.JsonBuilder;
-import org.w3c.dom.Element;
 import sm.collector.entity.Content;
 import sm.collector.entity.Post;
 import sm.collector.entity.Profile;
 
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class FlickrCollector extends Collector {
-    // private  final Transport transportAPI ;
+
+
     public List<Profile> collectProfiles(String keyword) {
         return null;
     }
 
     public List<Post> collectPosts(String queryTerm) {
+
         List<Post> posts = new LinkedList<>();
         Flickr flickr = authentification();
         TestInterface testInterface = flickr.getTestInterface();
@@ -48,14 +50,13 @@ public class FlickrCollector extends Collector {
         try {
             PhotoList photoList = photosInterface.search(searchParams, 20, 1);
             for (int i = 0; i < photoList.size(); i++) {
+
                 posts.add(new Post(Content.Type.FLICKR, (Photo) photoList.get(i)));
             }
         } catch (FlickrException e) {
             System.err.println("There was an IO error: " + e.getCause() + " : "
                     + e.getMessage());
         }
-
-
         return posts;
     }
 
@@ -64,6 +65,17 @@ public class FlickrCollector extends Collector {
         String sharedSecret = "91844af3aa9d6069";
         Flickr flickr = new Flickr(apiKey, sharedSecret, new REST());
         return flickr;
+    }
+    /*
+         * Prompt the user to enter a query term and return the user-specified term.
+         */
+    public static String getInputQuery() throws IOException {
+        String inputQuery = "";
+        System.out.print("Please enter a search term: ");
+        BufferedReader bReader = new BufferedReader(new InputStreamReader(
+                System.in));
+        inputQuery = bReader.readLine();
+        return inputQuery;
     }
 
 }
