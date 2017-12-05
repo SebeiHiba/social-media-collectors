@@ -3,6 +3,7 @@ package sm.collector;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.json.JsonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.*;
 import sm.collector.entity.Content;
@@ -33,12 +34,7 @@ public class YouTubeCollector extends Collector {
     //Collect Profiles
     public List<Profile> collectProfiles(String queryTerm) {
         List<Profile> profiles = new LinkedList<>();
-        try {
-            String queryTersm = getInputQuery();
-        } catch (IOException e) {
-            System.err.println("There was an IO error: " + e.getCause() + " : "
-                    + e.getMessage());
-        }
+
         search = intialize(queryTerm, "channel");
         // Call the API and print results.
         try {
@@ -57,24 +53,14 @@ public class YouTubeCollector extends Collector {
     //Collect Published Video
     public List<Post> collectPosts(String queryTerm) {
         List<Post> posts = new LinkedList<>();
-
-        try {
-            String queryTersm = getInputQuery();
-        } catch (IOException e) {
-            System.err.println("There was an IO error: " + e.getCause() + " : "
-                    + e.getMessage());
-        }
         search = intialize(queryTerm, "video");
         search.setMaxResults(NUMBER_OF_VIDEOS_RETURNED);
         // Call the API and print results.
         try {
             SearchListResponse searchResponse = search.execute();
             List<SearchResult> searchResultList = searchResponse.getItems();
-
             for (int i = 0; i < searchResultList.size(); i++) {
-                System.out.println("searchResult" + searchResultList.get(i).toPrettyString());
-                posts.add(new Post(Content.Type.YOUTUBE, searchResultList.get(i)));
-
+                posts.add(new Post(Content.Type.YOUTUBE,searchResultList.get(i)));
             }
      /* if (searchResultList != null) {
             searchCommentsByVideo (searchResultList.iterator(), queryTerm);

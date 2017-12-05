@@ -49,9 +49,10 @@ public class FlickrCollector extends Collector {
         // PhotoList photoList=null;
         try {
             PhotoList photoList = photosInterface.search(searchParams, 20, 1);
+
             for (int i = 0; i < photoList.size(); i++) {
 
-                posts.add(new Post(Content.Type.FLICKR, (Photo) photoList.get(i)));
+                posts.add(new Post(Content.Type.FLICKR, (Photo)photoList.get(i)));
             }
         } catch (FlickrException e) {
             System.err.println("There was an IO error: " + e.getCause() + " : "
