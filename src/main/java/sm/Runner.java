@@ -5,16 +5,21 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
 import sm.collector.Collector;
+import sm.collector.entity.Content;
 import sm.collector.entity.Post;
 import sm.collector.entity.Profile;
 import sm.io.IO;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Runner {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         String version = Runner.class.getPackage().getImplementationVersion();
 
         MainCommand main = new MainCommand();
@@ -23,13 +28,18 @@ public class Runner {
         DownloadCommand downloadCommand = new DownloadCommand();
         jc.addCommand("download", downloadCommand);
 
+
+        downloadCommand.socialMedias = "twitter-google_plus-youtube";
+        downloadCommand.dir = "C:\\Users\\amina\\Data\\";
+        downloadCommand.type = "post";
+        downloadCommand.keywords = "obama";
+
         try {
             jc.parse(args);
         } catch (ParameterException e) {
             e.printStackTrace();
             jc.usage();
         }
-
         if (jc.getParsedCommand() == null) {
             jc.usage();
         }
@@ -51,20 +61,41 @@ public class Runner {
         String[] socialMedias = downloadCommand.socialMedias.split("-");
         String[] keywords = downloadCommand.keywords.split("-");
         List<Collector> collectors = CollectorFactory.create(socialMedias);
-
+        Set<String> ids;
         for (String word : keywords) {
 
             if (profile) {
                 for (Collector collector : collectors) {
                     List<Profile> profiles = collector.collectProfiles(word);
-                    profiles.forEach(io::save);
+
+                    try {
+                        List<Content> newIDs = null;
+                        List<Content> contents = new ArrayList<Content>();
+                        contents.addAll(profiles);
+                        newIDs = io.verifyEntries(contents, "Profile");
+                        newIDs.forEach(io::save);
+                        if (newIDs.size() != 0)
+                            io.saveIDs(newIDs.get(0).type, "Profile", newIDs);
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
             if (post) {
                 for (Collector collector : collectors) {
                     List<Post> posts = collector.collectPosts(word);
-                    posts.forEach(io::save);
+                    try {
+                        List<Content> newIDs = null;
+                        List<Content> contents = new ArrayList<Content>();
+                        contents.addAll(posts);
+                        newIDs = io.verifyEntries(contents, "Post");
+                        newIDs.forEach(io::save);
+                        if (newIDs.size() != 0)
+                            io.saveIDs(newIDs.get(0).type, "Post", newIDs);
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
