@@ -9,10 +9,17 @@ public abstract class Content {
     }
 
     public final Type type;
+    public  String id ;
 
-    public Content(Type type) {
+    public Content(Type type , String id) {
         this.type = type;
+        this.id = id;
     }
+    public Content(Type type ) {
+        this.type = type;
+
+    }
+
 
     @Override
     public boolean equals(Object o) {
