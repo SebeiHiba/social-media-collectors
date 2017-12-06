@@ -7,6 +7,7 @@ import twitter4j.conf.ConfigurationBuilder;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class TwitterCollector extends Collector {
 
@@ -32,7 +33,7 @@ public class TwitterCollector extends Collector {
                 result = twitter.search(query);
                 List<Status> tweets = result.getTweets();
                 for (Status tweet : tweets) {
-                    posts.add(new Post(Content.Type.TWITTER,tweet));
+                    posts.add(new Post(Content.Type.TWITTER,tweet, Objects.toString(tweet.getId())));
                 }
 
             } while ((query = result.nextQuery()) != null);
@@ -55,7 +56,7 @@ public class TwitterCollector extends Collector {
             e.printStackTrace();
         }
         for (User user : users) {
-            profiles.add(new Profile(Content.Type.TWITTER, user));
+            profiles.add(new Profile(Content.Type.TWITTER,user, Objects.toString(user.getId())));
         }
         return profiles;
     }

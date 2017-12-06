@@ -1,5 +1,7 @@
 package sm.collector.entity;
 
+import groovy.json.JsonBuilder;
+
 import java.util.Objects;
 
 //TODO unify the post content
@@ -7,8 +9,8 @@ public class Post extends Content {
 
     public final Object content;
 
-    public Post(Type type, Object content) {
-        super(type);
+    public Post(Type type, Object content, String id) {
+        super(type,id);
         this.content = content;
     }
 
@@ -24,5 +26,9 @@ public class Post extends Content {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), content);
+    }
+    @Override
+    public String toString() {
+        return new JsonBuilder(content).toPrettyString();
     }
 }
