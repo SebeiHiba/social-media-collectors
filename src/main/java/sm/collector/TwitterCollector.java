@@ -33,7 +33,7 @@ public class TwitterCollector extends Collector {
                 result = twitter.search(query);
                 List<Status> tweets = result.getTweets();
                 for (Status tweet : tweets) {
-                    posts.add(new Post(Content.Type.TWITTER,tweet, Objects.toString(tweet.getId())));
+                    posts.add(new Post(Content.Type.TWITTER,Objects.toString(tweet.getId()),tweet));
                 }
 
             } while ((query = result.nextQuery()) != null);
@@ -56,7 +56,7 @@ public class TwitterCollector extends Collector {
             e.printStackTrace();
         }
         for (User user : users) {
-            profiles.add(new Profile(Content.Type.TWITTER,user, Objects.toString(user.getId())));
+            profiles.add(new Profile(Content.Type.TWITTER,Objects.toString(user.getId()),user));
         }
         return profiles;
     }
