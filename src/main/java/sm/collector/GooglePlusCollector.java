@@ -89,7 +89,7 @@ public class GooglePlusCollector extends Collector {
         while (activities != null && pageNumber <= 2) {
             pageNumber++;
             for (Activity activity : activities) {
-                posts.add(new Post(Content.Type.GOOGLE_PLUS, activity));
+                posts.add(new Post(Content.Type.GOOGLE_PLUS, activity.getId(),activity));
             }
             if (activityFeed.getNextPageToken() == null) {
                 break;
@@ -118,8 +118,9 @@ public class GooglePlusCollector extends Collector {
             int pageNumber = 1;
             while (people != null && pageNumber <= 2) {
                 pageNumber++;
+
                 for (Person person : people) {
-                    profiles.add(new Profile(Content.Type.GOOGLE_PLUS, person));
+                    profiles.add(new Profile(Content.Type.GOOGLE_PLUS,person.getId(), person));
                 }
                 if (peopleFeed.getNextPageToken() == null) {
                     break;
