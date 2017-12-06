@@ -32,16 +32,15 @@ public class YouTubeCollector extends Collector {
 
 
     //Collect Profiles
-    public List<Profile> collectProfiles(String queryTerm) {
+    public List <Profile> collectProfiles(String queryTerm) {
         List<Profile> profiles = new LinkedList<>();
-
-        search = intialize(queryTerm, "channel");
+                search = intialize(queryTerm, "channel");
         // Call the API and print results.
         try {
             SearchListResponse searchResponse = search.execute();
             List<SearchResult> searchResultList = searchResponse.getItems();
-            for (int i = 0; i < searchResultList.size(); i++) {
-                profiles.add(new Profile(Content.Type.YOUTUBE, searchResultList.get(i)));
+            for (SearchResult result:searchResultList) {
+                profiles.add(new Profile(Content.Type.YOUTUBE,result.getId().getChannelId(), result));
             }
         } catch (IOException e) {
             System.err.println("There was an IO error: " + e.getCause() + " : "
@@ -49,28 +48,27 @@ public class YouTubeCollector extends Collector {
         }
         return profiles;
     }
-
     //Collect Published Video
-    public List<Post> collectPosts(String queryTerm) {
+    public List<Post> collectPosts(String queryTerm){
         List<Post> posts = new LinkedList<>();
+
+
         search = intialize(queryTerm, "video");
-        search.setMaxResults(NUMBER_OF_VIDEOS_RETURNED);
         // Call the API and print results.
         try {
             SearchListResponse searchResponse = search.execute();
             List<SearchResult> searchResultList = searchResponse.getItems();
-            for (int i = 0; i < searchResultList.size(); i++) {
-                posts.add(new Post(Content.Type.YOUTUBE,searchResultList.get(i)));
+            for (SearchResult result:searchResultList) {
+                posts.add(new Post(Content.Type.YOUTUBE, result.getId().getVideoId(), result));
+
             }
-     /* if (searchResultList != null) {
-            searchCommentsByVideo (searchResultList.iterator(), queryTerm);
-        }*/
         } catch (IOException e) {
             System.err.println("There was an IO error: " + e.getCause() + " : "
                     + e.getMessage());
         }
         return posts;
     }
+
 
     // Search Comments By Video ID
     public static List<CommentThread> searchCommentsByVideo(
