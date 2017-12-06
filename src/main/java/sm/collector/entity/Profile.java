@@ -9,8 +9,8 @@ public class Profile extends Content {
 
     public final Object content;
 
-    public Profile(Type type, Object content) {
-        super(type);
+    public Profile(Type type, Object content, String id) {
+        super(type,id);
         this.content = content;
     }
 
