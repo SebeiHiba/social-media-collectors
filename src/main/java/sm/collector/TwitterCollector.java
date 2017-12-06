@@ -36,6 +36,7 @@ public class TwitterCollector extends Collector {
                     posts.add(new Post(Content.Type.TWITTER,Objects.toString(tweet.getId()),tweet));
                 }
 
+
             } while ((query = result.nextQuery()) != null);
         } catch (TwitterException te) {
             te.printStackTrace();

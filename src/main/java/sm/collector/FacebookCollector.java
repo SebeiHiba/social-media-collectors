@@ -37,6 +37,7 @@ public class FacebookCollector extends Collector {
 
         for (User user : publicSearch.getData()) {
             profiles.add(new Profile(Content.Type.FACEBOOK, user.getId(), user));
+
         }
 
         return profiles;

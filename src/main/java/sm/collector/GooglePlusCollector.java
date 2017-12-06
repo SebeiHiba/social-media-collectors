@@ -118,6 +118,7 @@ public class GooglePlusCollector extends Collector {
             int pageNumber = 1;
             while (people != null && pageNumber <= 2) {
                 pageNumber++;
+
                 for (Person person : people) {
                     profiles.add(new Profile(Content.Type.GOOGLE_PLUS,person.getId(), person));
                 }
