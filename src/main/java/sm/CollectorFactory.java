@@ -1,6 +1,6 @@
 package sm;
 
-import sm.collector.Collector;
+import sm.collector.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,7 +11,15 @@ public class CollectorFactory {
     public static Collector create(String name) {
         switch (name) {
             case "facebook":
-                return null;//return new FacebookCollector();
+                return new FacebookCollector();
+            case "twitter":
+                return new TwitterCollector();
+            case "google_plus":
+                return new GooglePlusCollector();
+            case "youtube":
+                return new YouTubeCollector();
+            case "flickr":
+                return new FlickrCollector();
         }
 
         return null;
