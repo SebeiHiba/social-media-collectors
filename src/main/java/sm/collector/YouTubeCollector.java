@@ -50,7 +50,7 @@ public class YouTubeCollector extends Collector {
     }
     //Collect Published Video
     public List<Post> collectPosts(String queryTerm){
-        List<Post> posts = new LinkedList<>();
+     List<Post>   posts = new LinkedList<>();
 
 
         search = intialize(queryTerm, "video");

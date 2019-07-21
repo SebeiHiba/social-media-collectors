@@ -5,7 +5,8 @@ import java.util.Objects;
 public abstract class Content {
 
     public enum Type {
-        FACEBOOK, FLICKR, GOOGLE_PLUS, LINKEDIN, TWITTER, YOUTUBE
+      //TWITTER, FLICKR, GOOGLE_PLUS, LINKEDIN,  FACEBOOK, YOUTUBE
+      YOUTUBE,FACEBOOK,TWITTER,GOOGLE_PLUS,FLICKR
     }
 
     public final Type type;

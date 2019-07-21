@@ -7,7 +7,9 @@ import java.util.List;
 
 public abstract class Collector {
 
-    public abstract List<Post> collectPosts(String keyword);
+    public List<Post> collectPosts(String keyword) {
+        return null;
+    }
 
     public abstract List<Profile> collectProfiles(String keyword);
 }

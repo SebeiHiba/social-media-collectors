@@ -21,6 +21,20 @@
     <groupId>social-media-collector</groupId>
     <artifactId>collector</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <properties>
+
+        <!-- this makes maven-tools not bump us to snapshot versions -->
+        <stabilized>true</stabilized>
+        <!-- Fill these in via https://dev.twitter.com/apps -->
+     <!--   <consumer.key>A7UIKEpBjMlatRjuLwPQvyszL</consumer.key>
+        <consumer.secret>mTHpPptB3wRzShahIgygvB7chJVtyWJ1eJqbjio0mCvCJxP0XQ</consumer.secret>
+        <access.token>2803989151-eMg7JOf0RSmlLmoLbKYM7WEETQU7hIvmUtT29JM"</access.token>
+        <access.token.secret>WHMrp2cPIxSWK3RxdR5PaDtkJmaGIHdQphAISTcAY5eIa</access.token.secret>-->
+        <consumer.key>ImlrviRol6dnkqtpeR5A7e7iV </consumer.key>
+        <consumer.secret>GP3YgHjixagsYM9SOCPo9Rdo9vul7FptolkvFtHxbexIcRWBlu</consumer.secret>
+        <access.token>4220969668-ehcIO6uvboumzxJFdjJwit8qddwqnWJIugWhEU2</access.token>
+        <access.token.secret>sAyMEiLQxAhy0qyOeAKX5QxdERrIoqaoJPe70p5lcC9NH</access.token.secret>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.restfb</groupId>
@@ -72,6 +86,117 @@
             <artifactId>jcommander</artifactId>
             <version>1.69</version>
         </dependency>
+        <!--kAFKA dependencies-->
+       <!-- <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_2.10</artifactId>
+            <version>0.8.2.1</version>
+        </dependency>-->
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>hbc-twitter4j</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_2.11</artifactId>
+            <version>0.9.0.1</version>
+        </dependency>
+        <!--CARML Dependencies-->
+       <dependency>
+        <groupId>com.taxonic.carml</groupId>
+        <artifactId>carml-engine</artifactId>
+        <version>0.2.0</version>
+    </dependency>
+    <!-- Choose the resolvers to suit your need -->
+    <dependency>
+        <groupId>com.taxonic.carml</groupId>
+        <artifactId>carml-logical-source-resolver-jsonpath</artifactId>
+        <version>0.2.0</version>
+    </dependency>
+    <dependency>
+        <groupId>com.taxonic.carml</groupId>
+        <artifactId>carml-logical-source-resolver-xpath</artifactId>
+        <version>0.2.0</version>
+    </dependency>
+    <dependency>
+        <groupId>com.taxonic.carml</groupId>
+        <artifactId>carml-logical-source-resolver-csv</artifactId>
+        <version>0.2.0</version>
+    </dependency>
+
+
+
+        <!-- https://mvnrepository.com/artifact/org.apache.rya/rya.api -->
+        <dependency>
+            <groupId>org.apache.rya</groupId>
+            <artifactId>rya.api</artifactId>
+            <version>3.2.12-incubating</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.rya/accumulo.rya -->
+        <dependency>
+            <groupId>org.apache.rya</groupId>
+            <artifactId>accumulo.rya</artifactId>
+            <version>3.2.12-incubating</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.rya/rya.sail -->
+        <dependency>
+            <groupId>org.apache.rya</groupId>
+            <artifactId>rya.sail</artifactId>
+            <version>3.2.12-incubating</version>
+        </dependency>
+
+
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.rdf4j/rdf4j-repository-sail -->
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-sail</artifactId>
+            <version>2.4.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.eclipse.rdf4j/rdf4j-model -->
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-model</artifactId>
+            <version>2.4.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.rdf4j/rdf4j-sail-api -->
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-sail-api</artifactId>
+            <version>2.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-api</artifactId>
+            <version>2.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.rya/rya.reasoning -->
+        <!-- https://mvnrepository.com/artifact/org.apache.rya/rya.reasoning -->
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.1</version>
+        </dependency>
+
+
+
     </dependencies>
 
 </project>

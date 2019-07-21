@@ -17,14 +17,19 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.*;
 import java.util.List;
 
 public class YouTubeAuthentification {
     /**
      * Define a global instance of the HTTP transport.
      */
-    public static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+ public static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+  /*static Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("10.30.0.11", 8080));
 
+    public static final    HttpTransport HTTP_TRANSPORT  = new NetHttpTransport.Builder().setProxy(proxy).build();*/
+
+    /**
     /**
      * Define a global instance of the JSON factory.
      */
@@ -44,6 +49,7 @@ public class YouTubeAuthentification {
      */
     public static Credential authorize(List<String> scopes,
                                        String credentialDatastore) throws IOException {
+
 
         System.out.println("sopes" + scopes.toString());
 
