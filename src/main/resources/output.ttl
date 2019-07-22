@@ -1,0 +1,9 @@
+
+  <http://localhost/socialNetwork/model/fullProfessor/1011230945347809281>   <http://localhost/socialNetwork/model/hasName> <http://localhost/socialNetwork/model/Ali>.
+    <http://localhost/socialNetwork/model/fullProfessor/1011230>   <http://localhost/socialNetwork/model/hasName> <http://localhost/socialNetwork/model/Sami>.
+    <http://localhost/socialNetwork/model/professor/101123099281>   <http://localhost/socialNetwork/model/hasName> <http://localhost/socialNetwork/model/Ahmed>.
+ <http://localhost/socialNetwork/model/fullProfessor/1011230>   <http://www.w3.org/1999/02/22-rdf-syntax-ns#hasType>  <http://localhost/socialNetwork/model/fullProfessor> .
+  <http://localhost/socialNetwork/model/fullProfessor/1011230945347809281>   <http://www.w3.org/1999/02/22-rdf-syntax-ns#hasType>  <http://localhost/socialNetwork/model/fullProfessor> .
+  <http://localhost/socialNetwork/model/fullProfessor> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://localhost/socialNetwork/model/professor>.
+
+  <http://localhost/socialNetwork/model/professor> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://localhost/socialNetwork/model/faculty>.
