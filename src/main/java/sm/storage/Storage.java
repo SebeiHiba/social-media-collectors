@@ -89,42 +89,7 @@ store.setRyaDAO(dao);
         }
 
 
-        //load data from file
- /*final File file = new File("/home/admin/IdeaProjects/social-media-collectors/src/main/resources/store.rdf");
-
-                try {
-                    conn.add(new FileInputStream(file), file.getName(),
-                            RDFFormat.TURTLE, new Resource[]{});
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (RDFParseException e) {
-                    e.printStackTrace();
-                } catch (org.openrdf.repository.RepositoryException e) {
-                    e.printStackTrace();
-                }*/
-
-
-        // conn.add(new FileInputStream(file), file.getName(),
-                //RDFFormat.NTRIPLES, new Resource[]{});
-    /*    ValueFactory vf = new ValueFactoryImpl();
-        String litdupsNS="urn:test:litdups#";
-        conn.add(vf.createStatement(vf.createURI(litdupsNS, "UndergraduateStudent"), RDFS.SUBCLASSOF, vf.createURI(litdupsNS, "Student")));
-        conn.add(vf.createStatement(vf.createURI(litdupsNS, "Student"), RDFS.SUBCLASSOF, vf.createURI(litdupsNS, "Person")));
-        conn.add(vf.createStatement(vf.createURI(litdupsNS, "UgradA"), RDF.TYPE, vf.createURI(litdupsNS, "UndergraduateStudent")));
-        conn.add(vf.createStatement(vf.createURI(litdupsNS, "StudentB"), RDF.TYPE, vf.createURI(litdupsNS, "Student")));
-        conn.add(vf.createStatement(vf.createURI(litdupsNS, "PersonC"), RDF.TYPE, vf.createURI(litdupsNS, "Person")));
-
-        try{
-            conn.commit();
-        } catch (org.openrdf.repository.RepositoryException e) {
-            e.printStackTrace();
-        }*/
-   /*String query="PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
-                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-                "PREFIX ex: <http://example.org/> \n" +
-                "PREFIX zoo: <http://example.org/zoo/>  \n" +
-             "select ?x where {?type rdfs:subClassOf ex:animal." +
-           "?x rdf:type ?type.}";*/
+        
      final String query="PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
                 "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
                 "PREFIX lit: <urn:test:litdups#>\n" +
