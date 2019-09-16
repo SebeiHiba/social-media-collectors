@@ -148,19 +148,11 @@ public class Youtube {
      */
     public static YouTube.Search.List intialize(String queryTerm, String type) {
 
- /* System.setProperty("https.proxyHost", "10.30.0.11");
-        System.setProperty("https.proxyPort", "8080");
-        System.setProperty("https.proxyUser", "05376263");
-        System.setProperty("https.proxyPassword", "rana05376263");
-        System.setProperty("proxySet", "true");*/
-        /*String encoded = new String(Base64.encodeBase64(new String("05376263:rana05376263").getBytes()));
-        String base64encodedCredentials = "Basic " + encoded;*/
-       //myService.getRequestFactory().setPrivateHeader("Proxy-Authorization", base64encodedCredentials);
+
         // Read the developer key from the properties file.
         Properties properties = new Properties();
         try {
-          /*  InputStream in = YouTubeCollector.class.getResourceAsStream("/"
-                    + PROPERTIES_FILENAME);*/
+
             InputStream in = YouTubeCollector.class.getResourceAsStream("/"
                     + PROPERTIES_FILENAME );
             properties.load(in);
