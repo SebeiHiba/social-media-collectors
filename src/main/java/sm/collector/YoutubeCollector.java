@@ -26,7 +26,7 @@ import com.google.api.services.youtube.model.ResourceId;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 
-public class YouTubeColector extends Collector {
+public class YouTubeCollector extends Collector {
     /**
      * Define a global variable that identifies the name of a file that contains
      * the developer's API key.
